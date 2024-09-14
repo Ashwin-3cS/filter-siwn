@@ -3,6 +3,7 @@ import CastPublisher from '../components/CastPublisher'
 import Sidebar from '../components/SideBar'
 import FeedBar from '../components/FeedBar'
 import StoryBar from '../components/StoryBar'
+import RightSidebar from '../components/RightSidebar'
 
 const page = () => {
   return (
@@ -10,6 +11,7 @@ const page = () => {
       <StoryBar/>
       <Sidebar/>
       <FeedBar/>  
+      <RightSidebar/>
     </div>
   )
 }
