@@ -8,6 +8,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation'; 
 import { navlinks } from '../constants';
 import Image from 'next/image';
+import { NeynarAuthButton } from '@neynar/react';
 
 interface IconProps {
   styles?: string;
@@ -45,13 +46,15 @@ const Sidebar: React.FC = () => {
               name={link.name}
               isActive={isActive === link.name}
               handleClick={() => {
-                if (!link.disabled) {
+                {
                   setIsActive(link.name);
                 }
               }}
             />
           </Link>
+          
         ))}
+        <NeynarAuthButton/>
       </div>
     </div>
   );

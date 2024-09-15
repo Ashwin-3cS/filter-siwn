@@ -1,7 +1,9 @@
+
+
 "use client";
 
 import { useState } from "react";
-import { AxiosError } from "axios";
+import axios, { AxiosError } from "axios";
 import { NeynarAuthButton, useNeynarContext } from "@neynar/react";
 import Image from "next/image";
 import UploadForm from "./UploadForm";
@@ -15,35 +17,29 @@ export default function CastPublisher() {
   const handlePublishCast = async () => {
     try {
       console.log(NEYNAR_API_KEY, 'api key');
-  
+
       const url = 'https://api.neynar.com/v2/farcaster/cast';
+
+      // Prepare embeds array only if a valid URL is available
+      const embeds = postUrl ? [{ url: postUrl }] : [];
+
       const options = {
         method: 'POST',
+        url: url,
         headers: {
           accept: 'application/json',
           api_key: NEYNAR_API_KEY!,
-          'content-type': 'application/json'
+          'content-type': 'application/json',
         },
-        body: JSON.stringify({
+        data: {
           signer_uuid: user?.signer_uuid,
           text: text,
-          embeds: [
-            {
-              url: postUrl || ''
-            }
-          ]
-        })
+          embeds: embeds,  // Either an empty array or with the URL
+        },
       };
 
-      const response = await fetch(url, options);
-      console.log(response);
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
-      }
-      
-      const json = await response.json();
-      console.log(json);
+      const response = await axios.request(options);
+      console.log(response.data);
 
       // Reset the form after a successful cast
       setText("");
@@ -51,7 +47,7 @@ export default function CastPublisher() {
 
     } catch (err) {
       if (err instanceof AxiosError) {
-        // Handle Axios error if using Axios
+        // Handle Axios error
         const message = err.response?.data?.message || "An error occurred";
         alert(message);
       } else if (err instanceof Error) {
@@ -70,16 +66,19 @@ export default function CastPublisher() {
   };
 
   return (
-    <div className="flex flex-col gap-4 w-96 p-4 rounded-md shadow-md">
+    <div className="flex flex-col gap-4 rounded-md shadow-md h-screen justify-center items-center">
+      <UploadForm onUrlUpdate={handleUrlUpdate} />
       <div className="flex items-center gap-4">
         {user?.pfp_url && (
-          <Image
-            src={user.pfp_url}
-            width={40}
-            height={40}
-            alt="User Profile Picture"
-            className="rounded-full"
-          />
+          <div>
+            <Image
+              src={user.pfp_url}
+              width={40}
+              height={40}
+              alt="User Profile Picture"
+              className="rounded-full"
+            />
+          </div>
         )}
         <p className="text-lg font-semibold">{user?.display_name}</p>
       </div>
@@ -88,7 +87,7 @@ export default function CastPublisher() {
         onChange={(e) => setText(e.target.value)}
         placeholder="Say Something"
         rows={5}
-        className="w-full p-2 rounded-md shadow-md text-black placeholder:text-gray-900"
+        className="p-2 rounded-md shadow-md text-black placeholder:text-gray-900"
       />
       <button
         onClick={handlePublishCast}
@@ -96,7 +95,6 @@ export default function CastPublisher() {
       >
         Cast
       </button>
-      <UploadForm onUrlUpdate={handleUrlUpdate} />
     </div>
   );
 }

@@ -1,14 +1,16 @@
 import React from 'react'
 import Sidebar from '../components/SideBar'
-import Profile from '../components/Profile'
 import StoryBar from '../components/StoryBar'
+import RightSidebar from '../components/RightSidebar'
+import CastPublisher from '../components/CastPublisher'
 
 const page = () => {
   return (
-    <div>
+    <div >
       <StoryBar/>
       <Sidebar/>
-      <Profile/>
+      <CastPublisher/>
+      <RightSidebar/>
     </div>
   )
 }

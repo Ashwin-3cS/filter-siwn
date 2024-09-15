@@ -2,6 +2,7 @@
 import dashboard from '@/app/assets/dashboard.svg';
 import profile from '@/app/assets/profile.svg';
 import logout from '@/app/assets/logout.svg';
+import post from '@/app/assets/post.png'
 
 
 export const navlinks = [
@@ -17,9 +18,15 @@ export const navlinks = [
     link: '/Profile',
   },
   {
-    name: 'logout',
-    imgUrl: logout,
-    link: '/',
-    disabled: true,
+    name:'post',
+    imgUrl:post,
+    link:'/Cast-Post'
+
   },
+  // {
+  //   name: 'logout',
+  //   imgUrl: logout,
+  //   link: '/',
+  //   disabled: true,
+  // },
 ];

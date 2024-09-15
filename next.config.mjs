@@ -1,7 +1,12 @@
-// next.config.js
 export default {
-    images: {
-      domains: ['i.imgur.com'], // Add your external image domains here
-    },
-  };
-  
+  images: {
+    domains: [
+      'imagedelivery.net',
+      'i.imgur.com',
+      'i.seadn.io',
+      'res.cloudinary.com',
+      'openseauserdata.com'
+    ],
+  },
+};
+
