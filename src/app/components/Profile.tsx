@@ -249,7 +249,7 @@ const ProfileWithFeed: React.FC = () => {
   return (
     <section className="flex flex-col items-center justify-center h-screen mt-16">
       {/* FirstSection - User Profile */}
-      <div className="w-1/2 h-1/2 flex flex-row gap-6">
+      <div className="w-1/2 h-1/3 flex flex-row gap-6">
         {user?.pfp_url && (
           <div>
             <Image
