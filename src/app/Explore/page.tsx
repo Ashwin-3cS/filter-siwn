@@ -1,14 +1,12 @@
 import React from 'react'
 import Sidebar from '../components/SideBar'
-import Profile from '../components/Profile'
-import StoryBar from '../components/StoryBar'
+import UserFeed from '../components/UserFeed'
 
 const page = () => {
   return (
     <div>
-      {/* <StoryBar/> */}
-      <Sidebar/>
-      <Profile/>
+        <Sidebar/>
+        <UserFeed/>
     </div>
   )
 }

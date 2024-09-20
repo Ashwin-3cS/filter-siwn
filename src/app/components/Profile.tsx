@@ -1,7 +1,4 @@
-
-
-
-'use client'
+'use client';
 
 import React, { useState, useEffect } from 'react';
 import { useNeynarContext } from '@neynar/react';
@@ -20,7 +17,7 @@ const ProfileWithFeed: React.FC = () => {
   const signerUuid = user?.signer_uuid; // Get signer UUID from context
   const apiKey = process.env.NEXT_PUBLIC_NEYNAR_API_KEY; // API key from environment variables
 
-  const fetchData = async () => {
+  const fetchData = async (useCursor = false) => {
     if (!userFid) {
       console.error('userFid is undefined');
       return; // Exit if userFid is not available
@@ -29,20 +26,27 @@ const ProfileWithFeed: React.FC = () => {
     try {
       setLoading(true); // Set loading state before API call
 
+      console.log(userFid);
+      console.log(cursor);
+
+      // Prepare API URL
+      let url = `https://api.neynar.com/v2/farcaster/feed/user/casts?fid=${userFid}&limit=50&include_replies=true`;
+      if (useCursor && cursor) {
+        url += `&cursor=${cursor}`; // Append cursor if available
+      }
+
       const options = {
         method: 'GET',
-        url: `https://api.neynar.com/v2/farcaster/feed/user/casts?fid=${userFid}&limit=50${cursor ? `&cursor=${cursor}` : ''}&include_replies=true`,
-        headers: { accept: 'application/json', api_key: apiKey }
+        url,
+        headers: { accept: 'application/json', api_key: apiKey },
       };
 
       const response = await axios.request(options); // API request
-
       const data = response.data.casts;
       const nextCursor = response.data.next?.cursor; // Get next cursor for pagination
 
       setFeed((prevFeed) => [...prevFeed, ...data]); // Append new data to the existing feed
       setCursor(nextCursor || null); // Set next cursor for future API requests
-
       setLoading(false); // Set loading state after fetching
     } catch (error) {
       console.error('Error fetching data:', error);
@@ -66,12 +70,12 @@ const ProfileWithFeed: React.FC = () => {
         headers: {
           accept: 'application/json',
           api_key: apiKey,
-          'content-type': 'application/json'
+          'content-type': 'application/json',
         },
         data: {
           target_hash: hash,
-          signer_uuid: signerUuid
-        }
+          signer_uuid: signerUuid,
+        },
       };
 
       const response = await axios.request(options); // API request to delete cast
@@ -89,13 +93,13 @@ const ProfileWithFeed: React.FC = () => {
   // Fetch initial data when userFid is available
   useEffect(() => {
     if (userFid) {
-      fetchData(); // Only fetch data when userFid is defined
+      fetchData(); // Fetch data without cursor initially
     }
   }, [userFid]); // Run the effect only when userFid changes
 
   const loadMore = () => {
     if (!loading && cursor) {
-      fetchData(); // Load more data when 'Load More' button is clicked
+      fetchData(true); // Load more data when 'Load More' button is clicked with cursor
     }
   };
 
@@ -114,16 +118,13 @@ const ProfileWithFeed: React.FC = () => {
             />
           </div>
         )}
-        
         {/* First SubSection */}
         <div className="flex flex-col gap-4">
           <p className="text-3xl">{user?.username}</p>
-
           <div className="flex flex-row gap-4">
             <h3>{user?.follower_count} followers</h3>
             <h3>{user?.following_count} following</h3>
           </div>
-
           <div>
             <h2>{user?.profile?.bio?.text}</h2>
           </div>
@@ -139,11 +140,11 @@ const ProfileWithFeed: React.FC = () => {
           feed.map((item, index) => (
             <div key={index} className="relative mb-4 p-2 bg-gray-700 rounded">
               <div className="dropdown dropdown-end absolute top-2 right-2">
-                <div tabIndex={0} role="button" className=" m-1" >
+                <div tabIndex={0} role="button" className="m-1">
                   {deleting ? 'Deleting...' : '...'}
                 </div>
                 <ul tabIndex={0} className="dropdown-content menu bg-base-100 rounded-box z-[1] w-52 p-2 shadow">
-                  <button className='btn bg-red-500' onClick={() => deleteCast(item.hash)}>Delete Cast</button>
+                  <button className="btn bg-red-500" onClick={() => deleteCast(item.hash)}>Delete Cast</button>
                 </ul>
               </div>
               <p>{item.text || 'No content'}</p>
