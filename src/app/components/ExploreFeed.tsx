@@ -6,7 +6,7 @@ const ExploreFeed = () => {
   return (
     <section className='flex flex-col items-center justify-center h-screen'>
       {/* First section Top User Accounts Display */}
-        <UserFeed/>
+        {/* <UserFeed/> */}
     
       {/* Second section Channels Display*/}  
         <ChannelFeed/>

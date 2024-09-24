@@ -3,7 +3,8 @@
 import React, { useState, useEffect } from 'react';
 import { useNeynarContext } from '@neynar/react';
 import axios from 'axios';
-import Image from 'next/image';
+import Link from 'next/link'; // Import Link for navigation
+import Image from 'next/image'; // Make sure you import the Image component
 
 const ProfileWithFeed: React.FC = () => {
   const { user } = useNeynarContext(); // Fetch user data from Neynar context
@@ -53,7 +54,7 @@ const ProfileWithFeed: React.FC = () => {
     }
   };
 
-  console.log(feed)
+  console.log(feed);
 
   return (
     <section className='bg-slate-600 w-1/2 p-4'>
@@ -61,17 +62,18 @@ const ProfileWithFeed: React.FC = () => {
       <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4'>
         {feed.length > 0 ? (
           feed.map((item, index) => (
-            <div key={index} className='bg-gray-700 p-4 rounded-lg'>
+            <Link href={`/Channels/${item.id}`} key={index} className='bg-gray-700 p-4 rounded-lg hover:bg-gray-600 transition'>
+              {/* Wrap the entire card in Link for full-card navigation */}
               <p>{item.name || 'No channel name'}</p>
               <small>Channel ID: {item.id}</small>
               <Image
                 src={item.image_url}
-                width={200}
-                height={200}
+                width={500}
+                height={500}
                 alt="User Profile Picture"
-                className="rounded-md"
+                className="rounded-full"
               />
-            </div>
+            </Link>
           ))
         ) : (
           <p>No data available</p>
