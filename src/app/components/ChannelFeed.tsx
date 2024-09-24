@@ -62,6 +62,7 @@ const ProfileWithFeed: React.FC = () => {
       <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4'>
         {feed.length > 0 ? (
           feed.map((item, index) => (
+            
             <Link href={`/Channels/${item.id}`} key={index} className='bg-gray-700 p-4 rounded-lg hover:bg-gray-600 transition'>
               {/* Wrap the entire card in Link for full-card navigation */}
               <p>{item.name || 'No channel name'}</p>
