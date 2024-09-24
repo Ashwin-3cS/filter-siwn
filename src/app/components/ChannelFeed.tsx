@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNeynarContext } from '@neynar/react';
 import axios from 'axios';
+import Image from 'next/image';
 
 const ProfileWithFeed: React.FC = () => {
   const { user } = useNeynarContext(); // Fetch user data from Neynar context
@@ -17,7 +18,7 @@ const ProfileWithFeed: React.FC = () => {
       setLoading(true); // Set loading state before API call
 
       // Prepare API URL
-      let url = `https://api.neynar.com/v2/farcaster/channel/list?limit=200`;
+      let url = `https://api.neynar.com/v2/farcaster/channel/list?limit=10`;
       if (useCursor && cursor) {
         url += `&cursor=${encodeURIComponent(cursor)}`; // Append cursor dynamically if available
       }
@@ -52,15 +53,24 @@ const ProfileWithFeed: React.FC = () => {
     }
   };
 
+  console.log(feed)
+
   return (
-    <section>
+    <section className='bg-slate-600 w-1/2 p-4'>
       {/* User's Feed */}
-      <div>
+      <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4'>
         {feed.length > 0 ? (
           feed.map((item, index) => (
-            <div key={index}>
+            <div key={index} className='bg-gray-700 p-4 rounded-lg'>
               <p>{item.name || 'No channel name'}</p>
               <small>Channel ID: {item.id}</small>
+              <Image
+                src={item.image_url}
+                width={200}
+                height={200}
+                alt="User Profile Picture"
+                className="rounded-md"
+              />
             </div>
           ))
         ) : (
@@ -69,7 +79,11 @@ const ProfileWithFeed: React.FC = () => {
 
         {/* Load More Button */}
         {cursor && (
-          <button onClick={loadMore} disabled={loading}>
+          <button
+            onClick={loadMore}
+            disabled={loading}
+            className="col-span-full mt-4 bg-blue-500 text-white p-2 rounded"
+          >
             {loading ? 'Loading...' : 'Load More'}
           </button>
         )}
